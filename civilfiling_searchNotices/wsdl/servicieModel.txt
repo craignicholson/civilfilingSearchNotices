@@ -1,0 +1,7 @@
+    <system.serviceModel>
+        <bindings>
+            <basicHttpBinding>
+                <binding name="CivilFilingWSPortBinding" messageEncoding="Mtom" />
+            </basicHttpBinding>
+        </bindings>
+    </system.serviceModel>

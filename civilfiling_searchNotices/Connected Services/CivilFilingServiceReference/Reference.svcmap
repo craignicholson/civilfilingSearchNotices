@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="cb06c0f0-ff52-47e9-83cb-26fc1af0f9e3" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="C:\Users\craig\source\repos\civilfiling_searchnotices\civilfiling_searchnotices\wsdl\CivilFilingWSService.wsdl" Protocol="file" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="CivilFilingWSService_schema1.xsd" MetadataType="Schema" ID="d152b2d7-0a92-412d-a162-f23c8417d5f7" SourceId="1" SourceUrl="file:///C:/Users/craig/source/repos/civilfiling_searchnotices/civilfiling_searchnotices/wsdl/CivilFilingWSService_schema1.xsd" />
+    <MetadataFile FileName="CivilFilingWSService.wsdl" MetadataType="Wsdl" ID="6a85f724-61c5-4eb9-8296-bd28b62a5ee3" SourceId="1" SourceUrl="file:///C:/Users/craig/source/repos/civilfiling_searchnotices/civilfiling_searchnotices/wsdl/CivilFilingWSService.wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

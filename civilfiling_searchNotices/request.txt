@@ -1,0 +1,15 @@
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+    <s:Header>
+        <Security xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <wsse:UsernameToken Id="feinsuch" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+                <wsse:Username>@username</wsse:Username>
+                <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">@password</wsse:Password>
+            </wsse:UsernameToken>
+        </Security>
+    </s:Header>
+    <s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <searchNotices xmlns="http://webservice.civilfiling.ecourts.ito.aoc.nj/">
+            <arg0 xmlns=""><firmId>@firmId</firmId><noticeDate>@noticeDate</noticeDate></arg0>
+        </searchNotices>
+    </s:Body>
+</s:Envelope>
