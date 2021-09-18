@@ -3,7 +3,7 @@
 
 Version 1.1, C#
 
-Application intetgrates with the New Jersey eCourts system [https://www.njcourts.gov/attorneys/ecourts.html] to Search the results for a filed complaint.
+Application integrates with the New Jersey eCourts system [https://www.njcourts.gov/attorneys/ecourts.html] to Search the results for a filed complaint.
 
 Application - civilfiling_searchNotices downloads the Notices provided by Jefis (New Jersey Courts)
 
