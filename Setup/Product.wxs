@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="Jefis Search Notices" Language="1033" Version="1.1.0.0" Manufacturer="CraigNicholson" UpgradeCode="f5265ce2-9b29-4bd7-9459-fa050781ce33">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <Media Id="1" Cabinet="NotUse" CompressionLevel="high" EmbedCab="yes"/>
+
+    <Feature Id="ProductFeature" Title="Setup" Level="1" ConfigurableDirectory="INSTALLDIR">
+      <ComponentRef Id="SearchNoticesComponent" />
+    </Feature>
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="INSTALLFOLDER" Name="Jefis" FileSource="C:\">
+        <Directory Id="INSTALLDIR" Name="Tools">
+          <Directory Id="AppDir" Name="SearchNotices">
+           <!--Use the VSTool Create Guid, why Win64 is no? can we change and get performance enhancement-->
+            <Component Id="SearchNoticesComponent" DiskId="1" Guid="{825B73C4-A8B1-4F05-86B8-AB540987C1FB}" Win64="no">
+
+              <!-- Make sure the exec is the first one on this list b/c the setup will register the windows service and point to this file -->
+              <File Id="civilfiling_searchNotices.exe" Name="civilfiling_searchNotices.exe" Source="$(var.civilfiling_searchNotices.TargetDir)\civilfiling_searchNotices.exe"/>
+              <File Id="civilfiling_searchNotices.exe.config" Name="civilfiling_searchNotices.exe.config" Source="$(var.civilfiling_searchNotices.TargetDir)"/>
+
+              <File Id="NLog.config" Name="NLog.config" Source="$(var.civilfiling_searchNotices.TargetDir)"/>
+              <File Id="NLog.dll" Name="NLog.dll" Source="$(var.civilfiling_searchNotices.TargetDir)"/>
+              <File Id="NLog.xml" Name="NLog.xml" Source="$(var.civilfiling_searchNotices.TargetDir)"/>
+
+              <File Id="request.txt" Name="request.txt" Source="$(var.civilfiling_searchNotices.TargetDir)"/>
+            
+
+            </Component>
+
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+  </Fragment>	
+
+</Wix>

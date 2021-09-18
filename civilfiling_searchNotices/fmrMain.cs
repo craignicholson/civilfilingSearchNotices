@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -35,8 +34,6 @@ namespace civilfiling_searchNotices
         string _responseFileLocationFileName;
         string _importFileLocation;
         string _readFrom;
-        string _readFromFileFolder;
-        string _readFromFileProcessedFolder;
         int _daysBack;
 
         /// <summary>
@@ -46,16 +43,45 @@ namespace civilfiling_searchNotices
 
         public fmrMain()
         {
+            _logger.Info("*************************** New Application Instance ***************************");
             InitializeComponent();
             InitializeConfigurations();
 
-            if (_readFrom.ToUpper() == "AUTO")
+            // Check for Command Line Parameters
+            string[] args = Environment.GetCommandLineArgs();
+            foreach (var arg in args)
             {
+                _logger.Info("Command Line Args:" + arg);
+            }
+
+            // Check to see if we are running in AUTO mode See .Config value 'readFrom'
+            // which is used to process files daily setup on a Task Scheduler
+            // Check for args.Length == 1, when app is run without parameters the application executable path
+            // is returned as the first arg.  {C:\Jefis\Tools\SearchNotices\civilfiling_searchNotices.exe}
+            // When the application is ran with parameters, expecting firmId and noticeDate
+            // we get 3 parameters {civilfiling_searchNotices.exe, F0000495, 20191215}
+            if (_readFrom.ToUpper() == "AUTO" && args.Length == 1)
+            {
+                _logger.Info("AUTO Run");
                 this.WindowState = FormWindowState.Minimized;
                 // this.ShowInTaskbar = false;
 
-                var noticeDate = DateTime.Now.AddDays(-_daysBack);
+                var noticeDate = DateTime.Now.AddDays(-(_daysBack));
                 Run(_firmId, noticeDate.ToString("yyyyMMdd"));
+            }
+
+            // Check to see if we have 3 args, and if we do hopefully the 2nd and 3rd are firmId and noticeDate
+            // TODO: Make a .bat or .PS script to run this application
+            if(args.Length ==3)
+            {
+                // Minimize the window instead of hiding 
+                this.WindowState = FormWindowState.Minimized;
+
+                // override the mode in case it is FORM so we can have the app hide and close
+                _logger.Info("Reset readFrom to AUTO");
+                _readFrom = "AUTO";
+                _logger.Info("Command Line Run");
+                Run(args[1].ToString(), args[2].ToString());
             }
         }
 
@@ -136,18 +162,6 @@ namespace civilfiling_searchNotices
                 _logger.Error("'readFrom' is not configured in Config file");
                 rtbSearchNotices.AppendText(Environment.NewLine + "'readFrom' is not configured in Config file");
             }
-            _readFromFileFolder = ConfigurationManager.AppSettings["readFromFileFolder"].ToString();
-            if (string.IsNullOrEmpty(_readFromFileFolder))
-            {
-                _logger.Error("'readFromFileFolder' is not configured in Config file");
-                rtbSearchNotices.AppendText(Environment.NewLine + "'readFromFileFolder' is not configured in Config file");
-            }
-            _readFromFileProcessedFolder = ConfigurationManager.AppSettings["readFromFileProcessedFolder"].ToString();
-            if (string.IsNullOrEmpty(_readFromFileProcessedFolder))
-            {
-                _logger.Error("'readFromFileProcessedFolder' is not configured in Config file");
-                rtbSearchNotices.AppendText(Environment.NewLine + "'readFromFileProcessedFolder' is not configured in Config file");
-            }
 
             // Mode is set in the app.config and correct values are Test and Production
             _mode = ConfigurationManager.AppSettings["mode"].ToString();
@@ -171,8 +185,7 @@ namespace civilfiling_searchNotices
                 rtbSearchNotices.AppendText(Environment.NewLine + "'daysBack' failed to convert " + daysBack + " to an interger");
             }
 
-            // lblMode.Text = _mode;
-            if (_mode == "Test")
+            if (_mode.ToUpper() == "Test".ToUpper())
             {
                 _CurrentEndPoint = _testEndPoint;
                 _CurrentUsername = _testUsername;
@@ -180,7 +193,7 @@ namespace civilfiling_searchNotices
                 rtbSearchNotices.AppendText(Environment.NewLine + "Mode is set to 'Test'");
                 _logger.Info("Mode is set to 'Test");
             }
-            else if (_mode == "Production")
+            else if (_mode.ToUpper() == "Production".ToUpper())
             {
                 _CurrentEndPoint = _productionEndPoint;
                 _CurrentUsername = _productionUsername;
@@ -195,47 +208,6 @@ namespace civilfiling_searchNotices
         }
 
         /// <summary>
-        /// SearchNoticeParameters Class used to support processing a csv file, see method ProcessFile.
-        /// </summary>
-        class SearchNoticeParameters
-        {
-            public string firmId;
-            public string noticeDate;
-
-            public static SearchNoticeParameters FromCsv(string csvLine)
-            {
-                string[] values = csvLine.Split(',');
-                SearchNoticeParameters data = new SearchNoticeParameters
-                {
-                    firmId = values[0],
-                    noticeDate = values[1]
-                };
-                return data;
-            }
-        }
-
-        /// <summary>
-        /// ProcessFile reads a csv file with the firmId and noticeDate.
-        /// </summary>
-        /// <returns>List(SearchNoticeParameters) containing firmId, noticeDate</returns>
-        private List<SearchNoticeParameters> ProcessFile()
-        {
-            // 
-            string ts = string.Format("{0:yyyyMMddHHmmssfff}", DateTime.Now) + ".csv";
-            
-            // get the file on the folder
-            List<SearchNoticeParameters> values = File.ReadAllLines(_readFromFileFolder)
-                                          .Skip(1)
-                                          .Select(v => SearchNoticeParameters.FromCsv(v))
-                                          .ToList();
-
-            // Archive the file
-            File.Move(_readFromFileFolder, _readFromFileProcessedFolder + ts); // Try to move
-
-            return values;
-        }
-
-        /// <summary>
         /// Run initializes the process to execute a http request to retreive the notices. Writes the response 
         /// to response.xml and parses the response for valid file and writes the data out to a text file for importing.
         /// </summary>
@@ -244,10 +216,7 @@ namespace civilfiling_searchNotices
         private async void Run(string firmId, string noticeDate)
         {
             _logger.Info("*************************** Run Web Request ***************************");
-            if (_readFrom.ToUpper() == "AUTO")
-            {
-                this.Hide();
-            }
+            var watch = System.Diagnostics.Stopwatch.StartNew();
 
             try
             {
@@ -263,6 +232,9 @@ namespace civilfiling_searchNotices
                 rtbSearchNotices.AppendText(Environment.NewLine + "firmID: " + firmId);
                 rtbSearchNotices.AppendText(Environment.NewLine + "noticeDate: " + noticeDate);
                 rtbSearchNotices.AppendText(Environment.NewLine + "Running in: " + _readFrom);
+
+                // Create /responses directory
+                System.IO.Directory.CreateDirectory(_importFileLocation);
 
                 HttpClient client = new HttpClient();
                 
@@ -324,9 +296,15 @@ namespace civilfiling_searchNotices
                     // stop processing
                     if (_readFrom.ToUpper() == "AUTO")
                     {
+                        watch.Stop();
+                        _logger.Info("Run -> ElapsedMilliseconds: " + watch.ElapsedMilliseconds.ToString());
+
                         _logger.Info("Run: AUTO Run Environment.Exit(0)");
                         Environment.Exit(0);
                     }
+
+                    watch.Stop();
+                    _logger.Info("Run -> ElapsedMilliseconds: " + watch.ElapsedMilliseconds.ToString());
 
                     rtbSearchNotices.SelectionStart = rtbSearchNotices.Text.Length;
                     rtbSearchNotices.ScrollToCaret();
@@ -349,10 +327,10 @@ namespace civilfiling_searchNotices
 
                     _logger.Info("Review response.xml for more details: " + _responseFileLocationFileName);
                     rtbSearchNotices.AppendText(Environment.NewLine + Environment.NewLine + "Review response.xml for more details: " + _responseFileLocationFileName);
-
                 }
 
-                // Scrub reponse file to make the import file
+                // Scrub response file to make the import file
+                // Damn you xop!!!
                 var oldLines = System.IO.File.ReadAllLines(responseFileName);
                 // Remove: 'Content' headers
                 var newLines = oldLines.Where(line => !line.Contains("Content"));
@@ -366,15 +344,22 @@ namespace civilfiling_searchNotices
                 rtbSearchNotices.AppendText(Environment.NewLine + "Attempt to Write Import File...");
                 _logger.Info("Attempt to Write Import to File");
 
+                // Catch the No Records Found and inform users and stop processing.
                 if (newLines.Count() == 0)
                 {
                     _logger.Info("No records found. No final import file will be written to disk.");
                     rtbSearchNotices.AppendText(Environment.NewLine + "No records found. No final import file will be written to disk.");
                     if (_readFrom.ToUpper() == "AUTO")
                     {
+                        watch.Stop();
+                        _logger.Info("Run -> ElapsedMilliseconds: " + watch.ElapsedMilliseconds.ToString());
+
                         _logger.Info("Run: AUTO Run Environment.Exit(0)");
                         Environment.Exit(0);
                     }
+
+                    watch.Stop();
+                    _logger.Info("Run -> ElapsedMilliseconds: " + watch.ElapsedMilliseconds.ToString());
 
                     rtbSearchNotices.SelectionStart = rtbSearchNotices.Text.Length;
                     rtbSearchNotices.ScrollToCaret();
@@ -383,12 +368,16 @@ namespace civilfiling_searchNotices
 
                 // Write the final output file which will be imported
                 System.IO.File.WriteAllLines(responseImportFileName, newLines);
-                _logger.Info("Write to Import File Complete: " + newLines.Count() + " Lines, " + responseImportFileName);
-                rtbSearchNotices.AppendText(Environment.NewLine + "Write to Import File Complete: " + newLines.Count() + " Lines, " + responseImportFileName);
+
+                // Post Process - this is were the nasty code begins
+                PostProcess(responseImportFileName);
 
                 // Finish process with a notification
                 _logger.Info("End Search Notices Request. Thanks!");
                 rtbSearchNotices.AppendText(Environment.NewLine + "End Search Notices Request. Thanks!");
+
+                watch.Stop();
+                _logger.Info("Run -> ElapsedMilliseconds: " + watch.ElapsedMilliseconds.ToString());
 
                 if (_readFrom.ToUpper() == "AUTO")
                 {
@@ -408,28 +397,74 @@ namespace civilfiling_searchNotices
 
         /// <summary>
         /// Send Button for posting the notice request.
+        /// https://github.com/rstropek/Samples/tree/master/WiXSamples
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void button1_ClickAsync(object sender, EventArgs e)
         {
-            _readFrom = _readFrom.ToUpper();
-
-            if (_readFrom == "FILE")
+            try
             {
-                List<SearchNoticeParameters> values = ProcessFile();
-                foreach (var item in values)
+                _readFrom = _readFrom.ToUpper();
+                if (_readFrom.ToUpper() == "FORM")
                 {
-                    _logger.Info(item.firmId + ", " + item.noticeDate);
-                    Run(item.firmId, item.noticeDate);
+                    // if it was a button click get date from calendar
+                    string noticeDate = dtSearchNotices.Value.ToString("yyyyMMdd");
+                    Run(_firmId, noticeDate);
                 }
             }
-            else if(_readFrom == "FORM")
+            catch (Exception ex)
             {
-                // if it was a button click get date from calendar
-                string noticeDate = dtSearchNotices.Value.ToString("yyyyMMdd");
-                Run(_firmId, noticeDate);
+                _logger.Error(ex.Message);
             }
+        }
+
+        /// <summary>
+        /// PostProcess cleans up the file to match the current Post Card file specification.
+        /// </summary>
+        /// <param name="filePath"></param>
+        private void PostProcess(string filePath)
+        {
+            // Remove all empty lines at the start only leaving one empty line between the start and the data.
+            bool previousLineHadData = false;
+            int counter = 0;
+            string line;
+            List<string> lines = new List<string>();
+
+            // Read the file and display it line by line.  
+            System.IO.StreamReader file = new System.IO.StreamReader(@filePath);
+            while ((line = file.ReadLine()) != null)
+            {
+                // At the top because found empty lines with one char
+                line = line.TrimEnd(); 
+                if (line.Length == 0)
+                {
+                    previousLineHadData = false;
+                }
+                else // we have data
+                {
+                    // File we are parsing has 5 CRLF's at the start, we only need one CRLF
+                    if(previousLineHadData == false)
+                    {
+                        lines.Add("");
+                    }
+                    if(line.Length > 1)
+                    {
+                        // We have two spaces added to each line and only need one space
+                        // remove the first char
+                        line = line.Substring(1);
+                    }
+                    lines.Add(line);
+                    previousLineHadData = true;
+                }
+                counter++;
+            }
+
+            file.Close();
+            System.IO.File.WriteAllLines(filePath, lines.ToArray());
+            _logger.Info("Write to Import File Complete: " + lines.Count() + " Lines, " + filePath);
+            rtbSearchNotices.AppendText(Environment.NewLine + "Write to Import File Complete: " + lines.Count() + " Lines");
+            rtbSearchNotices.AppendText(Environment.NewLine + "File: " + filePath);
         }
     }
 }

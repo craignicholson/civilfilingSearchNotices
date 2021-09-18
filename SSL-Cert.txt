@@ -1,0 +1,89 @@
+--------------------------------------- bulk filing save
+
+acidburn@coldflame:~$ openssl s_client -connect dptng.njcourts.gov:2045 -tls1_2
+CONNECTED(00000003)
+depth=2 C = US, O = DigiCert Inc, OU = www.digicert.com, CN = DigiCert Global Root CA
+verify return:1
+depth=1 C = US, O = DigiCert Inc, CN = DigiCert SHA2 Secure Server CA
+verify return:1
+depth=0 C = US, ST = New Jersey, L = Trenton, O = New Jersey Courts, OU = 25 W. Market St., CN = dptng.njcourts.gov
+verify return:1
+---
+Certificate chain
+ 0 s:/C=US/ST=New Jersey/L=Trenton/O=New Jersey Courts/OU=25 W. Market St./CN=dptng.njcourts.gov
+   i:/C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA
+ 1 s:/C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA
+   i:/C=US/O=DigiCert Inc/OU=www.digicert.com/CN=DigiCert Global Root CA
+ 2 s:/C=US/O=DigiCert Inc/OU=www.digicert.com/CN=DigiCert Global Root CA
+   i:/C=US/O=DigiCert Inc/OU=www.digicert.com/CN=DigiCert Global Root CA
+---
+Server certificate
+-----BEGIN CERTIFICATE-----
+MIIGvDCCBaSgAwIBAgIQDimhwG8FhTVqROrdSgQ8nDANBgkqhkiG9w0BAQsFADBN
+MQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMScwJQYDVQQDEx5E
+aWdpQ2VydCBTSEEyIFNlY3VyZSBTZXJ2ZXIgQ0EwHhcNMTgwNjI1MDAwMDAwWhcN
+MjAwNjI5MTIwMDAwWjCBiDELMAkGA1UEBhMCVVMxEzARBgNVBAgTCk5ldyBKZXJz
+ZXkxEDAOBgNVBAcTB1RyZW50b24xGjAYBgNVBAoTEU5ldyBKZXJzZXkgQ291cnRz
+MRkwFwYDVQQLExAyNSBXLiBNYXJrZXQgU3QuMRswGQYDVQQDExJkcHRuZy5uamNv
+dXJ0cy5nb3YwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDOOQyDgd1+
+2Zd3BOQCbgbo5hSNSiQJky9QFjSG1/MCqAiWTowxl+54IbJJm3/tuB9tmP3RjT2B
+nyOl+a6Sj0ON1RZ4Qom2HzOhbe/ZpuUIYV58+xTV7V9L9wj3yI6+3FV/QVxT9AH9
+l95pOa6Thf3/V+JAFhNMETjIyIHcPFUALmAKM0YhvbHENG/J6tYODupSj3sjVW9Z
+zjQLOv2kk6PkEY/5/5BuWMH0AD1/cuaTAF7mDzeOxYXwMIvI7dIceuGaiHr2Byb6
+ZpX0dK9L1SQjNC5soRS6M/Y95/7FbZ7k+ZFhINtIDWneldZZkeEFgK+MPLXCPRyu
+rwFK6OXg7GWnAgMBAAGjggNaMIIDVjAfBgNVHSMEGDAWgBQPgGEcgjFh1S8o541G
+OLQs4cbZ4jAdBgNVHQ4EFgQU7KS4nkL5DC2xgNH/KE5kj3rjaKEwHQYDVR0RBBYw
+FIISZHB0bmcubmpjb3VydHMuZ292MA4GA1UdDwEB/wQEAwIFoDAdBgNVHSUEFjAU
+BggrBgEFBQcDAQYIKwYBBQUHAwIwawYDVR0fBGQwYjAvoC2gK4YpaHR0cDovL2Ny
+bDMuZGlnaWNlcnQuY29tL3NzY2Etc2hhMi1nNi5jcmwwL6AtoCuGKWh0dHA6Ly9j
+cmw0LmRpZ2ljZXJ0LmNvbS9zc2NhLXNoYTItZzYuY3JsMEwGA1UdIARFMEMwNwYJ
+YIZIAYb9bAEBMCowKAYIKwYBBQUHAgEWHGh0dHBzOi8vd3d3LmRpZ2ljZXJ0LmNv
+bS9DUFMwCAYGZ4EMAQICMHwGCCsGAQUFBwEBBHAwbjAkBggrBgEFBQcwAYYYaHR0
+cDovL29jc3AuZGlnaWNlcnQuY29tMEYGCCsGAQUFBzAChjpodHRwOi8vY2FjZXJ0
+cy5kaWdpY2VydC5jb20vRGlnaUNlcnRTSEEyU2VjdXJlU2VydmVyQ0EuY3J0MAkG
+A1UdEwQCMAAwggGABgorBgEEAdZ5AgQCBIIBcASCAWwBagB3AKS5CZC0GFgUh7sT
+osxncAo8NZgE+RvfuON3zQ7IDdwQAAABZDdW4cMAAAQDAEgwRgIhAOBKqq1K7IUZ
+xmaGM0YnCRBmoWKog/dOwNPnH+7Sbo81AiEAoldSCV6JBNxJVwiOQMv2fEKFWubx
+i8C6/ueHaA3WQM0AdwCHdb/nWXz4jEOZX73zbv9WjUdWNv9KtWDBtOr/XqCDDwAA
+AWQ3VuKUAAAEAwBIMEYCIQCSouD3L7QSVHFuj+4VBVfKpRcDFtd5rmEipmHQPqf7
+wgIhAI9nvTJ1KpMrfEVK4fi3WIHw7ukCG+FiMcAg6J184rjsAHYAu9nfvB+KcbWT
+lCOXqpJ7RzhXlQqrUugakJZkNo4e0YUAAAFkN1bhxQAABAMARzBFAiEAijed1tEe
+j3hpfoArWJD7YitB3NSh+RXBgxZAFscSN2ICIGo1RET8I1IIt8j1v2qAld/Roq/m
+hyo0IV7WTOwdizlbMA0GCSqGSIb3DQEBCwUAA4IBAQDYLPerT3wEqcU9BOuQbixq
+hfRgD+yKdd95SS69tWX+0FuNmQ/3XgQm3jzqLfBXAqgOheBZrPr4MAIYB/twS1oa
+Webkwq7v4YebAuXsurOX1m4KlxCegKPnKD5reDuviT60XVNparqfpZL3ohoU5MzA
+ADftUKrikzL2uG+/he/7qpAg7tDsBlFsFXED/VJtrKiXz+RQ8c+S7uSznQrOdHke
+9biyHpuXnE9WoeYNU4kRrqJ8+ww03d3AgG0JG/EqL9m27sh4DK13yeGtTq5/USXr
+Hp+3z/xT0mOYJKbMgjFJqVt1UDc1sqWSUdd5n9Seor5Z2MmMufWdfkWQc+j6mkWz
+-----END CERTIFICATE-----
+subject=/C=US/ST=New Jersey/L=Trenton/O=New Jersey Courts/OU=25 W. Market St./CN=dptng.njcourts.gov
+issuer=/C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA
+---
+No client certificate CA names sent
+Peer signing digest: SHA512
+Server Temp Key: ECDH, P-256, 256 bits
+---
+SSL handshake has read 4364 bytes and written 431 bytes
+---
+New, TLSv1/SSLv3, Cipher is ECDHE-RSA-AES256-GCM-SHA384
+Server public key is 2048 bit
+Secure Renegotiation IS supported
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+SSL-Session:
+    Protocol  : TLSv1.2
+    Cipher    : ECDHE-RSA-AES256-GCM-SHA384
+    Session-ID: 49B3DBA42EC4C32323439820D5D433FC8A7AD8DFA4A370A3E2283B8C6D25C9F9
+    Session-ID-ctx:
+    Master-Key: C4BA2F5513CD109C348D6CE1C1ECC5AB8FDE15E8098ABBDAB0C7553F5D4F211F094E861805C17A5B48881A3AD3C875B1
+    Key-Arg   : None
+    PSK identity: None
+    PSK identity hint: None
+    SRP username: None
+    Start Time: 1581025255
+    Timeout   : 7200 (sec)
+    Verify return code: 0 (ok)
+---
+closed
+acidburn@coldflame:~$

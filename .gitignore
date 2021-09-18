@@ -10,8 +10,9 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
-# TestFiles
+# Folders
 [Tt]estFiles/
+[Cc]ustomer.fskslaw.com
 
 # Build results
 [Dd]ebug/
