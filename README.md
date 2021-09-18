@@ -309,7 +309,7 @@ As you can tell the data is married up by the content id (cid): 1b7a92ab08d1da79
 
 Application parses the response.xml file to create a similar file used by other applications. The Post Card format was the previous standard used by other applications before eCourts changed up the delivery of the data.
 
-### Step 4 - Totaly Different Software Application
+### Step 4 - Totally Different Software Application
 
 Users import this file into their own system. Out of this apps scope.
 
