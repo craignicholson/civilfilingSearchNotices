@@ -127,7 +127,7 @@ Make sure the testUsername and testPwd are setup with these credentials.
 To test each one of these you will need to update the App.Config firmId and then run the app and pick the correct date.
 
 ```xml
-<add key="firmId" value="F00012033"/>
+<add key="firmId" value="F00000147"/>
 ```
 
 ## Application Setup - Production
